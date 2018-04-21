@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Calculator</title>
+    <style>
+		#calculator {
+			background-color: rgb(38, 39, 40);
+		    width: 251px;
+		    height: 297px;
+		}
+		button {
+		    color: white;
+		    border: solid;
+		    background-color: #555555;
+		    border-color: #555555;
+		    font-size: 30px;
+		    margin-left: 10px;
+		    margin-top: 10px;
+		    outline: none;
+		    transition: all 0.2s ease-in-out;
+		}
+		button:hover {
+		    background-color: #6d6d6d;
+		    border-color: #6d6d6d;
+		    transition: 0.2s all;
+		}
+		button:active {
+			color: #555555;
+			background-color: white;
+		    border-color: white;
+		    transform: translateY(4px);
+		}
+		input, input::placeholder {
+		    width: 249.1px;
+		    color: white;
+		    background-color: #555555;
+		    font-size: 21px;
+		    border-color: #555555;
+		    border: 1px solid #555555;
+		    border-top: 1.4px solid green;
+		}
+		#equal {
+			background-color: green;
+		    border-color: green;
+		}
+		#equal:hover {
+			background-color: #009100;
+			border-color: #009100;
+		}
+		#equal:active {
+			color: #555555;
+			background-color: white;
+		    border-color: white;
+		    transform: translateY(4px);
+		}
+		#num0 {
+		    width: 116px;
+		}
+		#numDot, button[name=n] {
+		    width: 51px;
+		}
+		#minus, #divide {
+		    width: 36px;
+		}
+		#delete {
+		    font-size: 25px;
+		    width: 54px;
+		    height: 42px;
+		}
+    </style>
+</head>
+<body>
+    <div id="calculator" class="mainDiv">
+        <input type="text" value="0" id="output" class="output" readonly><br>
+        <button value="CE" id="clear" class="upper2">CE</button>
+        <button value="C" id="clearAll" class="upper2">C</button>
+        <button value="<=" id="delete" class="upper2">&#x232B;</button>
+        <button value="/" id="divide" name="operation" class="upper2">&divide;</button><br>
+        <button value="7" id="num7" name="n" class="upper">7</button>
+        <button value="8" id="num8" name="n" class="upper">8</button>
+        <button value="9" id="num9" name="n" class="upper">9</button>
+        <button value="*" id="mutliply" name="operation" class="upper">&times;</button><br>
+        <button value="4" id="num4" name="n" class="middle">4</button>
+        <button value="5" id="num5" name="n" class="middle">5</button>
+        <button value="6" id="num6" name="n" class="middle">6</button>
+        <button value="-" id="minus" name="operation" class="middle">-</button><br>
+        <button value="1" id="num1" name="n" class="lower">1</button>
+        <button value="2" id="num2" name="n" class="lower">2</button>
+        <button value="3" id="num3" name="n" class="lower">3</button>
+        <button value="+" id="plus" name="operation" class="lower">+</button><br>
+        <button value="0" id="num0" name="n" class="lower2">0</button>
+        <button value="." id="numDot" name="n" class="lower2">.</button>
+        <button value="=" id="equal" class="lower2">=</button><br>
+    </div>
+    <script>
+    	"use strict";
+		function addtoOutput(op) {
+			if ((op.value[op.value.length - 1] === '/' || op.value[op.value.length - 1] === '*' || op.value[op.value.length - 1] === '-' || op.value[op.value.length - 1] === '+')
+				&& (this.value === '/' || this.value === '*' || this.value === '-' || this.value === '+')) {
+				op.value = op.value.replace(op.value[op.value.length - 1], this.value);
+			}
+			else if (op.value[0] === '0' && this.value !== '.' && op.value.length === 1 && this.value !== '/' && this.value !== '*' && this.value !== '-' && this.value !== '+') {
+				op.value = op.value.replace(op.value[0], this.value);
+			}
+			else if (op.value === 'undefined' || op.value === 'Infinity' || op.value === '-Infinity') {
+				op.value = op.value.replace(op.value, this.value);
+			}
+			else {
+				op.value += this.value;
+			}
+		}
+
+		function equalize(op) {
+			try {
+				if (Number.isNaN(eval(op.value))) {
+					op.value = undefined;
+				}
+				else {
+					op.value = eval(op.value);
+				}
+			}
+			catch(err) {
+				throw err + ': Please, input a valid expression.';
+			}
+		}
+
+		function clearLastNum(op) {
+			let index;
+			for (let i = op.value.length - 1; i >= 0; i--) {
+				if (op.value[i] === '/' || op.value[i] === '*' || op.value[i] === '-' || op.value[i] === '+') {
+					index = i;
+					break;
+				}
+			}
+			if (index === undefined) {
+				op.value = '0';
+				return;
+			}
+			op.value = op.value.slice(0, op.value.length - 1 - (op.value.length - 1 - index));
+		}
+
+		function clearAllInput(op) {
+			op.value = '0';
+		}
+
+		function eraseLastDigit(op) {
+			if (op.value.length === 1) {
+				op.value = op.value.replace(op.value[0], 0);
+				return;
+			}
+			op.value = op.value.slice(0, op.value.length - 1);
+		}
+
+		const buttons = document.getElementsByName('n');
+		const operations = document.getElementsByName('operation');
+		const output = document.getElementById('output');
+		const equal = document.getElementById('equal');
+		const clear = document.getElementById('clear');
+		const clearAll = document.getElementById('clearAll');
+		const erase = document.getElementById('delete');
+
+		for (let i = 0; i < buttons.length; i++) {
+			buttons[i].addEventListener('click', function() {
+				addtoOutput.call(this, output);
+			});
+		};
+		for (let i = 0; i < operations.length; i++) {
+			operations[i].addEventListener('click', function() {
+				addtoOutput.call(this, output);
+			});
+		}
+
+		equal.addEventListener('click', () => equalize(output));
+		clear.addEventListener('click', () => clearLastNum(output));
+		clearAll.addEventListener('click', () => clearAllInput(output));
+		erase.addEventListener('click', () => eraseLastDigit(output));
+    </script>
+</body>
+</html>
