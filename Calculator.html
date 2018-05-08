@@ -73,7 +73,7 @@
     </style>
 </head>
 <body>
-    <div id="calculator" class="mainDiv">
+    <div id="calculator">
         <input type="text" value="0" id="output" class="output" readonly><br>
         <button value="CE" id="clear" class="upper2">CE</button>
         <button value="C" id="clearAll" class="upper2">C</button>
@@ -97,7 +97,7 @@
     </div>
     <script>
     	"use strict";
-		function addtoOutput(op) {
+		function addtoOutput(op) { // w/ RegExp woulda been bette' :D
 			if ((op.value[op.value.length - 1] === '/' || op.value[op.value.length - 1] === '*' || op.value[op.value.length - 1] === '-' || op.value[op.value.length - 1] === '+')
 				&& (this.value === '/' || this.value === '*' || this.value === '-' || this.value === '+')) {
 				op.value = op.value.replace(op.value[op.value.length - 1], this.value);
@@ -123,7 +123,7 @@
 				}
 			}
 			catch(err) {
-				throw err + ': Please, input a valid expression.';
+				throw `${err}: Please input a valid expression.`;
 			}
 		}
 
@@ -167,16 +167,25 @@
 				addtoOutput.call(this, output);
 			});
 		};
+
 		for (let i = 0; i < operations.length; i++) {
 			operations[i].addEventListener('click', function() {
 				addtoOutput.call(this, output);
 			});
-		}
+		};
 
-		equal.addEventListener('click', () => equalize(output));
-		clear.addEventListener('click', () => clearLastNum(output));
-		clearAll.addEventListener('click', () => clearAllInput(output));
-		erase.addEventListener('click', () => eraseLastDigit(output));
+		equal.addEventListener('click', () => {
+			equalize(output);
+		});
+		clear.addEventListener('click', () => {
+			clearLastNum(output)
+		});
+		clearAll.addEventListener('click', () => {
+			clearAllInput(output)
+		});
+		erase.addEventListener('click', () => {
+			eraseLastDigit(output)
+		});
     </script>
 </body>
 </html>
