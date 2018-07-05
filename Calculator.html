@@ -96,8 +96,12 @@
         <button value="=" id="equal" class="lower2">=</button><br>
     </div>
     <script>
-    	"use strict";
-	function addtoOutput(op) { // wish I knew RegExp :(
+	"use strict";
+
+	/**
+ 	* @todo Use RegEx.
+	*/
+	function addtoOutput(op) {
 		if ((op.value[op.value.length - 1] === '/' || op.value[op.value.length - 1] === '*' || op.value[op.value.length - 1] === '-' || op.value[op.value.length - 1] === '+')
 			&& (this.value === '/' || this.value === '*' || this.value === '-' || this.value === '+')) {
 			op.value = op.value.replace(op.value[op.value.length - 1], this.value);
